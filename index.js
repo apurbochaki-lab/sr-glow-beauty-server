@@ -51,7 +51,7 @@ async function connectToMongoDB() {
 
                 // Search filters
                 const search = req.query.search
-                console.log("Search Data -->", search)
+                // console.log("Search Data -->", search)
                 const category = req.query.category
                 const sort = req.query.sort
 
@@ -132,9 +132,12 @@ async function connectToMongoDB() {
                     }
                 })
 
+                const categories = await productsCollection.distinct("category")
+
                 // Final results
                 res.json({
                     success: true,
+                    categories,
                     currentPage: page,
                     totalProducts,
                     totalPages,
@@ -166,3 +169,11 @@ connectToMongoDB().catch(console.dir);
 app.listen(port, () => {
     console.log(`SR Glow Beauty --> http://localhost:${port}`)
 })
+
+
+
+
+
+
+
+
