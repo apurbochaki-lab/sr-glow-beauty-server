@@ -51,21 +51,16 @@ async function connectToMongoDB() {
 
                 // Search filters
                 const search = req.query.search
-                // console.log("Search Data -->", search)
                 const category = req.query.category
                 const sort = req.query.sort
 
                 const query = {}
 
-
                 if (search) {
                     query.$or = [
-                        {
-                            productName: { $regex: search, $options: "i" }
-                        },
-                        {
-                            shortDescription: { $regex: search, $options: "i" }
-                        }
+                        { productName: { $regex: search, $options: "i" } },
+                        { shortDescription: { $regex: search, $options: "i" } },
+                        { tags: { $regex: search, $options: "i" } }
                     ]
                 }
 
@@ -132,6 +127,7 @@ async function connectToMongoDB() {
                     }
                 })
 
+                // Retrieve all unique category names
                 const categories = await productsCollection.distinct("category")
 
                 // Final results
@@ -153,6 +149,33 @@ async function connectToMongoDB() {
             }
 
         })
+
+        // Product details page
+        app.get("/api/product-details/:slug", async (req, res) => {
+            try {
+                const { slug } = req.params
+                const result = await productsCollection.findOne({ slug })
+                res.json(result)
+                // console.log(result)
+
+            } catch (error) {
+                console.error(error);
+                res.status(500).send({
+                    success: false,
+                    message: "Failed to fetch product data",
+                    error
+                });
+            }
+        })
+
+
+
+
+
+
+
+
+
 
 
 
