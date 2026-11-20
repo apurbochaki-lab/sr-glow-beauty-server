@@ -15,8 +15,12 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
-    console.log("HIIIIIIIIIIIII")
     res.send('SR Glow Beauty Server Running...')
+})
+
+// For cron job - server anti sleep
+app.get('/health', (req, res) => {
+    res.status(200).json('OK')
 })
 
 
